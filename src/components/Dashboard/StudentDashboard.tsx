@@ -18,14 +18,14 @@ export const StudentDashboard: React.FC = () => {
   const [selectedSection, setSelectedSection] = useState('');
 
   const studentData = {
-    name: 'Arya Stark',
+    name: 'Priya ',
     rollNumber: 'CSE20A045',
     department: 'Computer Science Engineering',
     year: 3,
     section: 'A',
     cgpa: 8.75,
     phone: '+91 9876543210',
-    email: 'AryaStark@mywork.edu',
+    email: 'Priya123@mywork.edu',
     mentor: 'Dr. Priya Agarwal',
     profileImage: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop'
   };

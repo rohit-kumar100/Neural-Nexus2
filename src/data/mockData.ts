@@ -33,7 +33,7 @@ export const demoAccounts = {
   student: { 
     email: 'student@mywork.edu', 
     password: 'demo123', 
-    name: 'Rohit Sharma',
+    name: 'Priya',
     profileImage: "https://randomuser.me/api/portraits/men/32.jpg" 
   },
   faculty: { 
