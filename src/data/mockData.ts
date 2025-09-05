@@ -28,13 +28,44 @@ export const indianNames = [
   'Siddharth Iyer', 'Nisha Tiwari', 'Abhishek Mishra', 'Ritika Aggarwal', 'Varun Sethi'
 ];
 
+// ✅ Explicit profileImage for each demo account
 export const demoAccounts = {
-  student: { email: 'student@mywork.edu', password: 'demo123', name: 'Rohit Sharma' },
-  faculty: { email: 'faculty@mywork.edu', password: 'demo123', name: 'Dr. Priya Agarwal' },
-  admin: { email: 'admin@mywork.edu', password: 'demo123', name: 'Prof. Vikram Singh' },
-  parent: { email: 'parent@mywork.edu', password: 'demo123', name: 'Mrs. Deepika Raj' },
-  alumni: { email: 'alumni@mywork.edu', password: 'demo123', name: 'Aarav Jain' },
-  recruiter: { email: 'recruiter@mywork.edu', password: 'demo123', name: 'Neha Verma' }
+  student: { 
+    email: 'student@mywork.edu', 
+    password: 'demo123', 
+    name: 'Rohit Sharma',
+    profileImage: "https://randomuser.me/api/portraits/men/32.jpg" 
+  },
+  faculty: { 
+    email: 'faculty@mywork.edu', 
+    password: 'demo123', 
+    name: 'Dr. Priya Agarwal',
+    profileImage: "https://randomuser.me/api/portraits/women/44.jpg"
+  },
+  admin: { 
+    email: 'admin@mywork.edu', 
+    password: 'demo123', 
+    name: 'Prof. Vikram Singh',
+    profileImage: "https://randomuser.me/api/portraits/men/40.jpg"
+  },
+  parent: { 
+    email: 'parent@mywork.edu', 
+    password: 'demo123', 
+    name: 'Mrs. Deepika Raj',
+    profileImage: "https://randomuser.me/api/portraits/women/50.jpg"
+  },
+  alumni: { 
+    email: 'alumni@mywork.edu', 
+    password: 'demo123', 
+    name: 'Aarav Jain',
+    profileImage: "https://randomuser.me/api/portraits/men/12.jpg"
+  },
+  recruiter: { 
+    email: 'recruiter@mywork.edu', 
+    password: 'demo123', 
+    name: 'Neha Verma',
+    profileImage: "https://randomuser.me/api/portraits/women/22.jpg"
+  }
 };
 
 export const mockAchievements: Achievement[] = [
@@ -96,7 +127,7 @@ export const mockAlumni: Alumni[] = companies.flatMap(company =>
     linkedin: `https://linkedin.com/in/${indianNames[Math.floor(Math.random() * indianNames.length)].toLowerCase().replace(' ', '')}`,
     leetcode: `https://leetcode.com/${indianNames[Math.floor(Math.random() * indianNames.length)].toLowerCase().replace(' ', '')}`,
     github: `https://github.com/${indianNames[Math.floor(Math.random() * indianNames.length)].toLowerCase().replace(' ', '')}`,
-    profileImage: `https://images.pexels.com/photos/${1000 + Math.floor(Math.random() * 9000)}/pexels-photo-${1000 + Math.floor(Math.random() * 9000)}.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop`
+    profileImage: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 50)}.jpg`
   }))
 );
 
@@ -118,7 +149,7 @@ export const generateStudents = (department: string, year: number, section: stri
       cgpa: Math.random() > 0.7,
       phone: Math.random() > 0.6
     },
-    profileImage: `https://images.pexels.com/photos/${1000 + Math.floor(Math.random() * 9000)}/pexels-photo-${1000 + Math.floor(Math.random() * 9000)}.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop`
+    profileImage: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 50)}.jpg`
   }));
 };
 
