@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Download, Eye, EyeOff, MessageCircle, Filter, Search, Award, Briefcase, Users, Building } from 'lucide-react';
+import { Plus, Download, Eye, EyeOff, MessageCircle, Search, Award, Users, Building, BarChart } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
@@ -9,7 +9,7 @@ import { mockAchievements, mockAlumni, generateStudents, departments, companies 
 import { generatePDF } from '../../utils/pdfGenerator';
 
 export const StudentDashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'profile' | 'achievements' | 'alumni' | 'students'>('profile');
+  const [activeTab, setActiveTab] = useState<'profile' | 'achievements' | 'alumni' | 'students' | 'attendance'>('profile');
   const [hideDetails, setHideDetails] = useState({ cgpa: false, phone: false });
   const [selectedCompany, setSelectedCompany] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState('');
@@ -30,7 +30,24 @@ export const StudentDashboard: React.FC = () => {
     profileImage: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop'
   };
 
-  const filteredAlumni = mockAlumni.filter(alumni => 
+  // 🎯 Dummy Attendance Data
+  const attendanceData = {
+    overall: 85,
+    subjects: [
+      { name: 'Data Structures & Algorithms', attendance: 92, classes: 50, present: 46 },
+      { name: 'Computer Networks', attendance: 80, classes: 45, present: 36 },
+      { name: 'Database Systems', attendance: 88, classes: 48, present: 42 },
+      { name: 'Operating Systems', attendance: 90, classes: 44, present: 40 },
+      { name: 'Software Engineering', attendance: 84, classes: 42, present: 35 },
+      { name: 'Artificial Intelligence', attendance: 75, classes: 40, present: 30 },
+      { name: 'Machine Learning', attendance: 70, classes: 38, present: 27 },
+      { name: 'Internet of Things', attendance: 95, classes: 30, present: 29 },
+      { name: 'Cyber Security', attendance: 85, classes: 41, present: 35 },
+      { name: 'Compiler Design', attendance: 78, classes: 39, present: 31 },
+    ]
+  };
+
+  const filteredAlumni = mockAlumni.filter(alumni =>
     (!selectedCompany || alumni.company === selectedCompany) &&
     alumni.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -46,11 +63,13 @@ export const StudentDashboard: React.FC = () => {
     return [];
   };
 
+  // 🆕 Added Attendance tab
   const tabs = [
     { id: 'profile', name: 'Profile', icon: Award },
     { id: 'achievements', name: 'Achievements', icon: Award },
     { id: 'alumni', name: 'Alumni Network', icon: Users },
-    { id: 'students', name: 'Students', icon: Building }
+    { id: 'students', name: 'Students', icon: Building },
+    { id: 'attendance', name: 'Attendance', icon: BarChart }
   ];
 
   return (
@@ -77,11 +96,7 @@ export const StudentDashboard: React.FC = () => {
 
       {/* Profile Tab */}
       {activeTab === 'profile' && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="space-y-6"
-        >
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
           <Card className="p-8">
             <div className="flex items-start space-x-6">
               <img
@@ -92,18 +107,10 @@ export const StudentDashboard: React.FC = () => {
               <div className="flex-1">
                 <h2 className="text-3xl font-bold text-gray-900 mb-2">{studentData.name}</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-600">
-                  <div>
-                    <span className="font-medium">Roll Number:</span> {studentData.rollNumber}
-                  </div>
-                  <div>
-                    <span className="font-medium">Email:</span> {studentData.email}
-                  </div>
-                  <div>
-                    <span className="font-medium">Department:</span> {studentData.department}
-                  </div>
-                  <div>
-                    <span className="font-medium">Year:</span> {studentData.year} | Section: {studentData.section}
-                  </div>
+                  <div><span className="font-medium">Roll Number:</span> {studentData.rollNumber}</div>
+                  <div><span className="font-medium">Email:</span> {studentData.email}</div>
+                  <div><span className="font-medium">Department:</span> {studentData.department}</div>
+                  <div><span className="font-medium">Year:</span> {studentData.year} | Section: {studentData.section}</div>
                   <div className="flex items-center space-x-2">
                     <span className="font-medium">CGPA:</span>
                     {hideDetails.cgpa ? (
@@ -111,11 +118,7 @@ export const StudentDashboard: React.FC = () => {
                     ) : (
                       <span className="font-semibold text-green-600">{studentData.cgpa}</span>
                     )}
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setHideDetails(prev => ({ ...prev, cgpa: !prev.cgpa }))}
-                    >
+                    <Button variant="ghost" size="sm" onClick={() => setHideDetails(prev => ({ ...prev, cgpa: !prev.cgpa }))}>
                       {hideDetails.cgpa ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </Button>
                   </div>
@@ -126,17 +129,11 @@ export const StudentDashboard: React.FC = () => {
                     ) : (
                       <span>{studentData.phone}</span>
                     )}
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setHideDetails(prev => ({ ...prev, phone: !prev.phone }))}
-                    >
+                    <Button variant="ghost" size="sm" onClick={() => setHideDetails(prev => ({ ...prev, phone: !prev.phone }))}>
                       {hideDetails.phone ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </Button>
                   </div>
-                  <div>
-                    <span className="font-medium">Mentor:</span> {studentData.mentor}
-                  </div>
+                  <div><span className="font-medium">Mentor:</span> {studentData.mentor}</div>
                 </div>
               </div>
               <Button onClick={handleDownloadPortfolio} className="flex items-center space-x-2">
@@ -150,11 +147,7 @@ export const StudentDashboard: React.FC = () => {
 
       {/* Achievements Tab */}
       {activeTab === 'achievements' && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="space-y-6"
-        >
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
           <div className="flex justify-between items-center">
             <h2 className="text-2xl font-bold text-gray-900">My Achievements</h2>
             <Button className="flex items-center space-x-2">
@@ -162,15 +155,9 @@ export const StudentDashboard: React.FC = () => {
               <span>Add Achievement</span>
             </Button>
           </div>
-
           <div className="grid gap-4">
             {mockAchievements.map((achievement, index) => (
-              <motion.div
-                key={achievement.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 }}
-              >
+              <motion.div key={achievement.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.1 }}>
                 <Card className="p-6">
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
@@ -189,9 +176,7 @@ export const StudentDashboard: React.FC = () => {
                         <span className="capitalize">{achievement.type}</span>
                       </div>
                     </div>
-                    <Button variant="outline" size="sm">
-                      <Download className="h-4 w-4" />
-                    </Button>
+                    <Button variant="outline" size="sm"><Download className="h-4 w-4" /></Button>
                   </div>
                 </Card>
               </motion.div>
@@ -202,22 +187,13 @@ export const StudentDashboard: React.FC = () => {
 
       {/* Alumni Network Tab */}
       {activeTab === 'alumni' && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="space-y-6"
-        >
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0 md:space-x-4">
             <h2 className="text-2xl font-bold text-gray-900">Alumni Network</h2>
             <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  placeholder="Search alumni..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
+                <Input placeholder="Search alumni..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pl-10" />
               </div>
               <select
                 value={selectedCompany}
@@ -225,28 +201,16 @@ export const StudentDashboard: React.FC = () => {
                 className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">All Companies</option>
-                {companies.map(company => (
-                  <option key={company} value={company}>{company}</option>
-                ))}
+                {companies.map(company => <option key={company} value={company}>{company}</option>)}
               </select>
             </div>
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredAlumni.slice(0, 12).map((alumni, index) => (
-              <motion.div
-                key={alumni.id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: index * 0.05 }}
-              >
+              <motion.div key={alumni.id} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: index * 0.05 }}>
                 <Card hover className="p-6">
                   <div className="flex items-center space-x-4 mb-4">
-                    <img
-                      src={alumni.profileImage}
-                      alt={alumni.name}
-                      className="w-12 h-12 rounded-full object-cover"
-                    />
+                    <img src={alumni.profileImage} alt={alumni.name} className="w-12 h-12 rounded-full object-cover" />
                     <div>
                       <h3 className="font-semibold text-gray-900">{alumni.name}</h3>
                       <p className="text-sm text-gray-600">{alumni.position}</p>
@@ -258,15 +222,9 @@ export const StudentDashboard: React.FC = () => {
                     <p><span className="font-medium">Department:</span> {alumni.department}</p>
                   </div>
                   <div className="flex space-x-2 mb-4">
-                    {alumni.linkedin && (
-                      <Button variant="outline" size="sm" className="text-xs">LinkedIn</Button>
-                    )}
-                    {alumni.github && (
-                      <Button variant="outline" size="sm" className="text-xs">GitHub</Button>
-                    )}
-                    {alumni.leetcode && (
-                      <Button variant="outline" size="sm" className="text-xs">LeetCode</Button>
-                    )}
+                    {alumni.linkedin && <Button variant="outline" size="sm" className="text-xs">LinkedIn</Button>}
+                    {alumni.github && <Button variant="outline" size="sm" className="text-xs">GitHub</Button>}
+                    {alumni.leetcode && <Button variant="outline" size="sm" className="text-xs">LeetCode</Button>}
                   </div>
                   <Button className="w-full flex items-center justify-center space-x-2">
                     <MessageCircle className="h-4 w-4" />
@@ -281,52 +239,34 @@ export const StudentDashboard: React.FC = () => {
 
       {/* Students Tab */}
       {activeTab === 'students' && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="space-y-6"
-        >
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
           <h2 className="text-2xl font-bold text-gray-900">Student Directory</h2>
-          
           {/* Department Selection */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Department</label>
               <select
                 value={selectedDepartment}
-                onChange={(e) => {
-                  setSelectedDepartment(e.target.value);
-                  setSelectedYear(null);
-                  setSelectedSection('');
-                }}
+                onChange={(e) => { setSelectedDepartment(e.target.value); setSelectedYear(null); setSelectedSection(''); }}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">Select Department</option>
-                {departments.map(dept => (
-                  <option key={dept} value={dept}>{dept}</option>
-                ))}
+                {departments.map(dept => <option key={dept} value={dept}>{dept}</option>)}
               </select>
             </div>
-            
             {selectedDepartment && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Year</label>
                 <select
                   value={selectedYear || ''}
-                  onChange={(e) => {
-                    setSelectedYear(e.target.value ? parseInt(e.target.value) : null);
-                    setSelectedSection('');
-                  }}
+                  onChange={(e) => { setSelectedYear(e.target.value ? parseInt(e.target.value) : null); setSelectedSection(''); }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Select Year</option>
-                  {[1, 2, 3, 4].map(year => (
-                    <option key={year} value={year}>Year {year}</option>
-                  ))}
+                  {[1, 2, 3, 4].map(year => <option key={year} value={year}>Year {year}</option>)}
                 </select>
               </div>
             )}
-            
             {selectedYear && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Section</label>
@@ -336,31 +276,19 @@ export const StudentDashboard: React.FC = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Select Section</option>
-                  {['A', 'B', 'C'].map(section => (
-                    <option key={section} value={section}>Section {section}</option>
-                  ))}
+                  {['A', 'B', 'C'].map(section => <option key={section} value={section}>Section {section}</option>)}
                 </select>
               </div>
             )}
           </div>
-
           {/* Students List */}
           {selectedDepartment && selectedYear && selectedSection && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {getStudents().slice(0, 18).map((student, index) => (
-                <motion.div
-                  key={student.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.02 }}
-                >
+                <motion.div key={student.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.02 }}>
                   <Card hover className="p-4">
                     <div className="flex items-center space-x-3">
-                      <img
-                        src={student.profileImage}
-                        alt={student.name}
-                        className="w-10 h-10 rounded-full object-cover"
-                      />
+                      <img src={student.profileImage} alt={student.name} className="w-10 h-10 rounded-full object-cover" />
                       <div className="flex-1">
                         <h3 className="font-medium text-gray-900">{student.name}</h3>
                         <p className="text-sm text-gray-600">{student.rollNumber}</p>
@@ -372,6 +300,53 @@ export const StudentDashboard: React.FC = () => {
               ))}
             </div>
           )}
+        </motion.div>
+      )}
+
+      {/* Attendance Tab */}
+      {activeTab === 'attendance' && (
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+          <h2 className="text-2xl font-bold text-gray-900">My Attendance</h2>
+          <Card className="p-6">
+            {/* Overall Attendance */}
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-lg font-medium text-gray-900">Overall Attendance</span>
+                <span className={`text-2xl font-bold ${attendanceData.overall >= 75 ? 'text-green-600' : 'text-red-600'}`}>
+                  {attendanceData.overall}%
+                </span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-4">
+                <div
+                  className={`h-4 rounded-full ${attendanceData.overall >= 75 ? 'bg-green-500' : 'bg-red-500'}`}
+                  style={{ width: `${attendanceData.overall}%` }}
+                ></div>
+              </div>
+            </div>
+
+            {/* Subject-wise Attendance */}
+            <div className="space-y-4">
+              {attendanceData.subjects.map((subject, index) => (
+                <div key={index} className="border-b pb-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-medium text-gray-900">{subject.name}</span>
+                    <span className={`font-bold ${subject.attendance >= 75 ? 'text-green-600' : 'text-red-600'}`}>
+                      {subject.attendance}%
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-3">
+                    <div
+                      className={`h-3 rounded-full ${subject.attendance >= 75 ? 'bg-green-500' : 'bg-red-500'}`}
+                      style={{ width: `${subject.attendance}%` }}
+                    ></div>
+                  </div>
+                  <p className="text-sm text-gray-500 mt-1">
+                    {subject.present}/{subject.classes} classes attended
+                  </p>
+                </div>
+              ))}
+            </div>
+          </Card>
         </motion.div>
       )}
     </div>
