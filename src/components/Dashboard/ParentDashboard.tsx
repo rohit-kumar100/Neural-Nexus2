@@ -10,14 +10,14 @@ export const ParentDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'overview' | 'achievements' | 'attendance' | 'mentor'>('overview');
 
   const childData = {
-    name: 'Rohit Sharma',
-    rollNumber: 'CSE20A045',
-    department: 'Computer Science Engineering',
+    name: 'Rohit',
+    rollNumber: '0231csml200',
+    department: 'Computer Science Engineering (AI&ML)',
     year: 3,
-    section: 'A',
-    cgpa: 8.75,
+    section: 'B',
+    cgpa: 7.9,
     phone: '+91 9876543210',
-    email: 'rohit.sharma@mywork.edu',
+    email: 'Rohit@mywork.edu',
     mentor: {
       name: 'Dr. Priya Agarwal',
       email: 'priya.agarwal@mywork.edu',
@@ -29,7 +29,8 @@ export const ParentDashboard: React.FC = () => {
       email: 'vikram.singh@mywork.edu',
       phone: '+91 9876543212'
     },
-    profileImage: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop'
+   profileImage: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop'
+
   };
 
   const attendanceData = {
