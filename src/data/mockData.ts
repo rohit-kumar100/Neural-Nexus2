@@ -1,16 +1,17 @@
 import { Student, Alumni, Recruiter, Achievement } from '../types';
 
 export const departments = [
-  'Computer Science Engineering',
-  'Artificial Intelligence & Machine Learning',
-  'Information Technology',
-  'Electronics & Communication Engineering',
-  'Electrical & Electronics Engineering',
-  'Mechanical Engineering',
-  'Civil Engineering',
-  'Biotechnology',
-  'MBA',
-  'MCA'
+  'Web Technology',
+  'Design Thinking II',
+  'Data Analytics',
+  'BIDV',
+  'Computer Networks',
+  'Deep Learning',
+  'Cloud Computing',
+  'Cloud Visualization',
+  'Computer Networks lab',
+  'Deep Learning Lab',
+  'Software engineering ',
 ];
 
 export const companies = [
@@ -33,7 +34,7 @@ export const demoAccounts = {
   student: { 
     email: 'student@mywork.edu', 
     password: 'demo123', 
-    name: 'Priya',
+    name: 'Shaily yadav',
     profileImage: "https://randomuser.me/api/portraits/men/32.jpg" 
   },
   faculty: { 
@@ -65,6 +66,13 @@ export const demoAccounts = {
     password: 'demo123', 
     name: 'Neha Verma',
     profileImage: "https://randomuser.me/api/portraits/women/22.jpg"
+  },
+  // ✅ New Rohit profile
+  rohit: {
+    email: "rohit@mywork.edu",
+    password: "demo123",
+    name: "Rohit Sharma",
+    profileImage: "https://randomuser.me/api/portraits/men/45.jpg"
   }
 };
 
@@ -158,4 +166,14 @@ export const mockRecruiters: Recruiter[] = [
   { id: '2', name: 'Priya Sharma', company: 'Infosys', email: 'priya@infosys.com', approved: false },
   { id: '3', name: 'Amit Patel', company: 'Accenture', email: 'amit@accenture.com', approved: true },
   { id: '4', name: 'Sneha Gupta', company: 'Wipro', email: 'sneha@wipro.com', approved: false },
+];
+
+// ✅ Your 6 fixed students for Faculty Dashboard
+export const facultyStudents: Student[] = [
+  { id: "stu-1", name: "Rohit", rollNumber: "COM3A001", profileImage: "https://randomuser.me/api/portraits/men/1.jpg" },
+  { id: "stu-2", name: "Aray", rollNumber: "COM3A002", profileImage: "https://randomuser.me/api/portraits/men/2.jpg" },
+  { id: "stu-3", name: "Shaily", rollNumber: "COM3A003", profileImage: "https://randomuser.me/api/portraits/women/3.jpg" },
+  { id: "stu-4", name: "Pawanesh", rollNumber: "COM3A004", profileImage: "https://randomuser.me/api/portraits/men/4.jpg" },
+  { id: "stu-5", name: "Ananya", rollNumber: "COM3A005", profileImage: "https://randomuser.me/api/portraits/women/5.jpg" },
+  { id: "stu-6", name: "Vidhita", rollNumber: "COM3A006", profileImage: "https://randomuser.me/api/portraits/women/6.jpg" }
 ];

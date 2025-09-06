@@ -18,14 +18,14 @@ export const StudentDashboard: React.FC = () => {
   const [selectedSection, setSelectedSection] = useState('');
 
   const studentData = {
-    name: 'Priya ',
+    name: 'Shaily Yadav',
     rollNumber: 'CSE20A045',
     department: 'Computer Science Engineering',
     year: 3,
     section: 'A',
     cgpa: 8.75,
     phone: '+91 9876543210',
-    email: 'Priya123@mywork.edu',
+    email: 'Shaily23@mywork.edu',
     mentor: 'Dr. Priya Agarwal',
     profileImage: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop'
   };
@@ -34,16 +34,16 @@ export const StudentDashboard: React.FC = () => {
   const attendanceData = {
     overall: 85,
     subjects: [
-      { name: 'Data Structures & Algorithms', attendance: 92, classes: 50, present: 46 },
+      { name: 'Web Technology', attendance: 92, classes: 50, present: 46 },
       { name: 'Computer Networks', attendance: 80, classes: 45, present: 36 },
-      { name: 'Database Systems', attendance: 88, classes: 48, present: 42 },
+      { name: 'Data analytics', attendance: 88, classes: 48, present: 42 },
       { name: 'Operating Systems', attendance: 90, classes: 44, present: 40 },
       { name: 'Software Engineering', attendance: 84, classes: 42, present: 35 },
       { name: 'Artificial Intelligence', attendance: 75, classes: 40, present: 30 },
       { name: 'Machine Learning', attendance: 70, classes: 38, present: 27 },
-      { name: 'Internet of Things', attendance: 95, classes: 30, present: 29 },
-      { name: 'Cyber Security', attendance: 85, classes: 41, present: 35 },
-      { name: 'Compiler Design', attendance: 78, classes: 39, present: 31 },
+      { name: 'Deep learning', attendance: 95, classes: 30, present: 29 },
+      { name: 'Computer Networks lab', attendance: 85, classes: 41, present: 35 },
+      { name: 'Deep Learning Lab', attendance: 78, classes: 39, present: 31 },
     ]
   };
 

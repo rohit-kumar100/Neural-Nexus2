@@ -11,6 +11,9 @@ import { ParentDashboard } from './components/Dashboard/ParentDashboard';
 import { AlumniDashboard } from './components/Dashboard/AlumniDashboard';
 import { RecruiterDashboard } from './components/Dashboard/RecruiterDashboard';
 
+// ✅ Import Rohit Profile
+import RohitProfile from './components/Profile/RohitProfile';
+
 const AppContent: React.FC = () => {
   const { user } = useAuth();
   const [showLogin, setShowLogin] = useState(false);
@@ -31,6 +34,9 @@ const AppContent: React.FC = () => {
         return <AlumniDashboard />;
       case 'recruiter':
         return <RecruiterDashboard />;
+      // ✅ New role for Rohit
+      case 'rohit':
+        return <RohitProfile />;
       default:
         return null;
     }

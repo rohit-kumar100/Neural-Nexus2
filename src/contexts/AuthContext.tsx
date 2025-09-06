@@ -30,17 +30,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (email: string, password: string, role: UserRole): Promise<boolean> => {
-    // Check demo accounts
+    // ✅ Check demo accounts (includes Rohit now)
     const demoAccount = demoAccounts[role];
-    if (email === demoAccount.email && password === demoAccount.password) {
+    if (demoAccount && email === demoAccount.email && password === demoAccount.password) {
       const userData: User = {
         id: `${role}-1`,
         name: demoAccount.name,
         email: demoAccount.email,
         role,
-        department: role === 'student' || role === 'faculty' ? 'Computer Science Engineering' : undefined,
+        department:
+          role === 'student' || role === 'faculty'
+            ? 'Computer Science Engineering'
+            : undefined,
         year: role === 'student' ? 3 : undefined,
-        section: role === 'student' ? 'A' : undefined
+        section: role === 'student' ? 'A' : undefined,
       };
       setUser(userData);
       localStorage.setItem('mywork-user', JSON.stringify(userData));
@@ -51,14 +54,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const quickLogin = (role: UserRole) => {
     const demoAccount = demoAccounts[role];
+    if (!demoAccount) return;
+
     const userData: User = {
       id: `${role}-1`,
       name: demoAccount.name,
       email: demoAccount.email,
       role,
-      department: role === 'student' || role === 'faculty' ? 'Computer Science Engineering' : undefined,
+      department:
+        role === 'student' || role === 'faculty'
+          ? 'Computer Science Engineering'
+          : undefined,
       year: role === 'student' ? 3 : undefined,
-      section: role === 'student' ? 'A' : undefined
+      section: role === 'student' ? 'A' : undefined,
     };
     setUser(userData);
     localStorage.setItem('mywork-user', JSON.stringify(userData));
