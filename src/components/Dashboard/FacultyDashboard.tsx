@@ -1,16 +1,44 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle, XCircle, Clock, Users, TrendingUp, FileText, UserCheck } from 'lucide-react';
+import { CheckCircle, XCircle, Clock, Users, TrendingUp, FileText, UserCheck, ClipboardList } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { mockAchievements, departments, generateStudents } from '../../data/mockData';
 
 export const FacultyDashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'approvals' | 'students' | 'rankings' | 'assignments'>('approvals');
+  const [activeTab, setActiveTab] = useState<'approvals' | 'students' | 'rankings' | 'assignments' | 'attendance'>('approvals');
   const [pendingAchievements, setPendingAchievements] = useState(
     mockAchievements.map(a => ({ ...a, studentName: 'Rohit Sharma', studentId: 'CSE20A045' }))
   );
+
+  // ===== Attendance state (NEW) =====
+  const subjects = [
+    'Data Structures', 'Algorithms', 'Database Systems', 'Operating Systems', 'Computer Networks',
+    'Software Engineering', 'Artificial Intelligence', 'Machine Learning', 'Internet of Things', 'Compiler Design'
+  ];
+  const [selectedSubject, setSelectedSubject] = useState<string>(subjects[0]);
+  // attendance[subject][studentId] = true (present) | false (absent)
+  const [attendance, setAttendance] = useState<Record<string, Record<string, boolean>>>({});
+  const attendanceStudents = generateStudents('Computer Science Engineering', 3, 'A');
+
+  const handleMarkAttendance = (studentId: string, status: boolean) => {
+    setAttendance(prev => ({
+      ...prev,
+      [selectedSubject]: {
+        ...(prev[selectedSubject] || {}),
+        [studentId]: status
+      }
+    }));
+  };
+
+  const calculateAttendancePercentage = (subject: string) => {
+    const subjectAttendance = attendance[subject] || {};
+    const total = attendanceStudents.length;
+    const present = attendanceStudents.reduce((acc, s) => acc + (subjectAttendance[s.id] ? 1 : 0), 0);
+    return total ? Math.round((present / total) * 100) : 0;
+  };
+  // ===== End Attendance state =====
 
   const handleApproval = (id: string, status: 'approved' | 'rejected') => {
     setPendingAchievements(prev => 
@@ -43,7 +71,8 @@ export const FacultyDashboard: React.FC = () => {
     { id: 'approvals', name: 'Approvals', icon: CheckCircle },
     { id: 'students', name: 'My Students', icon: Users },
     { id: 'rankings', name: 'Rankings', icon: TrendingUp },
-    { id: 'assignments', name: 'Assignments', icon: FileText }
+    { id: 'assignments', name: 'Assignments', icon: FileText },
+    { id: 'attendance', name: 'Attendance', icon: ClipboardList } // NEW
   ];
 
   return (
@@ -90,7 +119,7 @@ export const FacultyDashboard: React.FC = () => {
         ))}
       </div>
 
-      {/* Approvals Tab */}
+      {/* Approvals Tab (UNCHANGED) */}
       {activeTab === 'approvals' && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -152,7 +181,7 @@ export const FacultyDashboard: React.FC = () => {
         </motion.div>
       )}
 
-      {/* Students Tab */}
+      {/* Students Tab (UNCHANGED) */}
       {activeTab === 'students' && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -206,7 +235,7 @@ export const FacultyDashboard: React.FC = () => {
         </motion.div>
       )}
 
-      {/* Rankings Tab */}
+      {/* Rankings Tab (UNCHANGED) */}
       {activeTab === 'rankings' && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -287,7 +316,7 @@ export const FacultyDashboard: React.FC = () => {
         </motion.div>
       )}
 
-      {/* Assignments Tab */}
+      {/* Assignments Tab (UNCHANGED) */}
       {activeTab === 'assignments' && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -343,6 +372,103 @@ export const FacultyDashboard: React.FC = () => {
                 </Card>
               </motion.div>
             ))}
+          </div>
+        </motion.div>
+      )}
+
+      {/* Attendance Tab (NEW) */}
+      {activeTab === 'attendance' && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-6"
+        >
+          <h2 className="text-2xl font-bold text-gray-900">Attendance Management</h2>
+
+          {/* Subject Selector */}
+          <div className="flex flex-wrap gap-2 mb-4">
+            {subjects.map((subj) => (
+              <Button
+                key={subj}
+                onClick={() => setSelectedSubject(subj)}
+                className={selectedSubject === subj ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800'}
+              >
+                {subj}
+              </Button>
+            ))}
+          </div>
+
+          {/* Summary */}
+          <Card className="p-4">
+            <div className="flex items-center justify-between">
+              <p className="text-lg font-semibold text-gray-900">
+                {selectedSubject} — Attendance: <span className="text-blue-600">{calculateAttendancePercentage(selectedSubject)}%</span>
+              </p>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    const allPresent: Record<string, boolean> = {};
+                    attendanceStudents.forEach(s => { allPresent[s.id] = true; });
+                    setAttendance(prev => ({ ...prev, [selectedSubject]: allPresent }));
+                  }}
+                >
+                  Mark All Present
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => setAttendance(prev => ({ ...prev, [selectedSubject]: {} }))}
+                >
+                  Clear
+                </Button>
+              </div>
+            </div>
+          </Card>
+
+          {/* Student List */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {attendanceStudents.map((student, index) => {
+              const marked = attendance[selectedSubject]?.[student.id] ?? false;
+              return (
+                <motion.div
+                  key={student.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.03 }}
+                >
+                  <Card className="p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <img src={student.profileImage} alt={student.name} className="w-10 h-10 rounded-full object-cover" />
+                        <div>
+                          <h3 className="font-semibold text-gray-900">{student.name}</h3>
+                          <p className="text-sm text-gray-600">{student.rollNumber}</p>
+                        </div>
+                      </div>
+                      <Badge variant={marked ? 'success' : 'error'}>
+                        {marked ? 'Present' : 'Absent'}
+                      </Badge>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        className="bg-green-600 hover:bg-green-700"
+                        onClick={() => handleMarkAttendance(student.id, true)}
+                      >
+                        Present
+                      </Button>
+                      <Button
+                        size="sm"
+                        className="bg-red-600 hover:bg-red-700"
+                        onClick={() => handleMarkAttendance(student.id, false)}
+                      >
+                        Absent
+                      </Button>
+                    </div>
+                  </Card>
+                </motion.div>
+              );
+            })}
           </div>
         </motion.div>
       )}
